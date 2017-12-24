@@ -32,7 +32,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-0.17.2, mkdocs-material-2.2.0">
+      <meta name="generator" content="mkdocs-0.17.2, mkdocs-material-2.2.5">
     
     
       
@@ -40,9 +40,9 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/application.5d3fffba.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/application.bcabdff3.css">
       
-        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.fbd935c7.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.792431c1.css">
       
     
     
@@ -1181,7 +1181,7 @@ D--&gt;&gt;A: Dashed open arrow</code></pre>
 <p>Simply including the libraries above is not enough as these libraries need to be pointed at the elements they need to convert.  Also, we need to configure the libraries with the settings we would like.</p>
 <p>As mentioned earlier, our flowchart elements have the <code>uml-flowchart</code> class assigned to them, and the sequence diagram elements have the <code>uml-sequence-diagram</code> class assigned to them. Below shows an example script to convert the UML diagrams for both flowcharts and sequence diagrams using the listed libraries above. This script will target the elements with the classes <code>uml-flowchart</code> and <code>uml-sequence-diagram</code>. The script will pass the content to the correct library to render the content.  It will then insert the rendered UML and remove the original source. This is just an example, and you are not required to use the following script. You are free to modify the example script or write your own to suite your specific custom fence.</p>
 <p>In the below example we create an <code>onReady</code> function to execute the conversion when the HTML is loaded.  We create a <code>convertUML</code> function that takes the class name to search for, the converter to use, and a settings object to feed into the converter.  We then call <code>onReady</code> and feed it a callback function that will execute <code>convertUML</code> for flowcharts and for sequence diagrams. Notice that <code>convertUML</code> can handle both the <code class="codehilite"><span class="p">&lt;</span><span class="nt">pre</span><span class="p">&gt;&lt;</span><span class="nt">code</span><span class="p">&gt;</span></code> format or the <code class="codehilite"><span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span></code> format we mentioned earlier.</p>
-<p>The actual <code>convertUML</code> function reads UML instructions from our element and sticks it in a div that gets appended to our main HTML content (in this case we look for the the <code>article</code> tag, but it could be anything, even <code>body</code>). We don't want to do it in place our UML instructions are because it might be under an element that is hiding it with <code>display: none</code> (like a <code>details</code> tag); it won't render correctly if its parent is not displayed.  After we render the SVG, we insert it back where it belongs throwing away the original element that had the instructions.</p>
+<p>The actual <code>convertUML</code> function reads UML instructions from our element and sticks it in a div that gets appended to our main HTML content (in this case we look for the the <code>body</code> tag, but it could be anything). We don't want to do it in place where our UML instructions are because it might be under an element that is hiding it with <code>display: none</code> (like a <code>details</code> tag); it won't render correctly if its parent is not displayed.  After we render the SVG, we insert it back where it belongs throwing away the original element that had the instructions.</p>
 <div class="codehilite"><pre><span></span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
 <span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
 
@@ -1218,8 +1218,8 @@ D--&gt;&gt;A: Dashed open arrow</code></pre>
     <span class="k">return</span> <span class="nx">parent</span><span class="p">.</span><span class="nx">textContent</span> <span class="o">||</span> <span class="nx">parent</span><span class="p">.</span><span class="nx">innerText</span><span class="p">;</span>
   <span class="p">};</span>
 
-  <span class="c1">// Change article to whatever element your main Markdown content lives.</span>
-  <span class="kd">var</span> <span class="nx">article</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">&quot;article&quot;</span><span class="p">);</span>
+  <span class="c1">// Change body to whatever element your main Markdown content lives.</span>
+  <span class="kd">var</span> <span class="nx">body</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">);</span>
   <span class="kd">var</span> <span class="nx">blocks</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">&quot;pre.&quot;</span> <span class="o">+</span> <span class="nx">className</span> <span class="o">+</span> <span class="s2">&quot;,div.&quot;</span> <span class="o">+</span> <span class="nx">className</span>
 
   <span class="c1">// Is there a settings object?</span>
@@ -1233,18 +1233,17 @@ D--&gt;&gt;A: Dashed open arrow</code></pre>
     <span class="nx">el</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">visibility</span> <span class="o">=</span> <span class="s2">&quot;hidden&quot;</span><span class="p">;</span>
     <span class="nx">el</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">position</span> <span class="o">=</span> <span class="s2">&quot;absolute&quot;</span><span class="p">;</span>
 
-    <span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="nx">parentEl</span><span class="p">.</span><span class="nx">tagName</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span> <span class="o">===</span> <span class="s2">&quot;pre&quot;</span> <span class="o">?</span> <span class="nx">getFromCode</span><span class="p">(</span><span class="nx">parentEl</span><span class="p">)</span> <span class="o">:</span> <span class="nx">getFromDiv</span><span class="p">(</span><span class="nx">parentEl</span><span class="p">)</span>
+    <span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="nx">parentEl</span><span class="p">.</span><span class="nx">tagName</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span> <span class="o">===</span> <span class="s2">&quot;pre&quot;</span> <span class="o">?</span> <span class="nx">getFromCode</span><span class="p">(</span><span class="nx">parentEl</span><span class="p">)</span> <span class="o">:</span> <span class="nx">getFromDiv</span><span class="p">(</span><span class="nx">parentEl</span><span class="p">);</span>
 
     <span class="c1">// Insert our new div at the end of our content to get general</span>
-    <span class="c1">// typset and page sizes as our parent might be `display:none`</span>
+    <span class="c1">// typeset and page sizes as our parent might be `display:none`</span>
     <span class="c1">// keeping us from getting the right sizes for our SVG.</span>
     <span class="c1">// Our new div will be hidden via &quot;visibility&quot; and take no space</span>
-    <span class="c1">// via `poistion: absolute`. When we are all done, use the</span>
+    <span class="c1">// via `position: absolute`. When we are all done, use the</span>
     <span class="c1">// original node as a reference to insert our SVG back</span>
-    <span class="c1">// into the proper place, and then make our SVG visilbe again.</span>
+    <span class="c1">// into the proper place, and then make our SVG visible again.</span>
     <span class="c1">// Lastly, clean up the old node.</span>
-    <span class="p">);</span>
-    <span class="nx">article</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">el</span><span class="p">);</span>
+    <span class="nx">body</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">el</span><span class="p">);</span>
     <span class="kd">var</span> <span class="nx">diagram</span> <span class="o">=</span> <span class="nx">converter</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
     <span class="nx">diagram</span><span class="p">.</span><span class="nx">drawSVG</span><span class="p">(</span><span class="nx">el</span><span class="p">,</span> <span class="nx">config</span><span class="p">);</span>
     <span class="nx">el</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">visibility</span> <span class="o">=</span> <span class="s2">&quot;visible&quot;</span><span class="p">;</span>
